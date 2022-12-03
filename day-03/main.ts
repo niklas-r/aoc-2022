@@ -5,13 +5,11 @@ const input = await getInput();
 const lowerCaseAsciiOffset = -96;
 const upperCaseAsciiOffset = -38;
 
-const sliceInHalf = (list: string[]): [string[], string[]] => {
-  const half = Math.ceil(list.length / 2);
-  return [list.slice(0, half), list.slice(half)];
+const groupByN = (n: number, data: string[][]) => {
+  const result = [];
+  for (let i = 0; i < data.length; i += n) result.push(data.slice(i, i + n));
+  return result;
 };
-
-const intersection = (listA: string[], listB: string[]) =>
-  listA.filter((x) => listB.includes(x))[0];
 
 const isUpperCase = (char: string) => char === char.toUpperCase();
 
@@ -23,11 +21,16 @@ const toPriority = (char: string) => {
   return char.charCodeAt(0) + lowerCaseAsciiOffset;
 };
 
-const result = input
+const rows = input
   .split(/\n/g)
-  .map((s) => s.split(""))
-  .map(sliceInHalf)
-  .map((halfs) => intersection(halfs[0], halfs[1]))
+  .map((s) => s.split(""));
+
+const groupsOfThree = groupByN(3, rows);
+
+const result = groupsOfThree
+  .map((group) =>
+    [...new Set(group.reduce((a, b) => a.filter((c) => b.includes(c))))][0]
+  )
   .map(toPriority)
   .reduce((memo, current) => memo + current, 0);
 
