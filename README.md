@@ -6,3 +6,4 @@
 - Rider
 - Typescript (Deno)
 - C#/.Net
+- Python
