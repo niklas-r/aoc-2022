@@ -11,16 +11,22 @@ def parse_input(lines: 'list[str]') -> 'list[list[int]]':
     return [list(map(int, re.findall(r'\d+', pairs))) for pairs in lines]
 
 
+def irange(a: int, b: int) -> 'range':
+    return range(a, b + 1)
+
+
 def step_1():
     text = read_input()
     pairs = parse_input(text)
-    double_work_counter = 0
+    result = 0
 
     for a, b, c, d in pairs:
-        if a in set(range(c, d)) and b in set(range(c, d)) or c in set(range(a, b)) and d in set(range(a, b)):
-            double_work_counter += 1
+        set_one = set(irange(a, b))
+        set_two = set(irange(c, d))
+        if len(set_one - set_two) == 0 or len(set_two - set_one) == 0:
+            result += 1
 
-    print(double_work_counter)
+    print(result)
 
 
 step_1()
