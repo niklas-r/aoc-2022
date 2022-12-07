@@ -21,23 +21,35 @@ def parse_input(lines: 'list[str]') -> Tuple['list[list[int]]', 'list[list[str]]
     return instructions, stack
 
 
-def reorder_stack(instructions: 'list[list[int]]', stack: 'list[list[str]]') -> 'list[list[str]]':
+def reorder_stack(reverse_order: bool, instructions: 'list[list[int]]', stack: 'list[list[str]]') -> 'list[list[str]]':
     ordered_stack = stack[::]
     for amount, origin, destination in instructions:
         to_be_moved = ordered_stack[origin-1][-amount:]
         ordered_stack[origin-1] = ordered_stack[origin-1][:len(ordered_stack[origin-1])-amount]
-        ordered_stack[destination-1] = ordered_stack[destination-1] + to_be_moved[::-1]
+        ordered_stack[destination-1] = ordered_stack[destination-1] + \
+            (to_be_moved[::-1] if reverse_order else to_be_moved)
     return ordered_stack
 
 
 def step_1() -> int:
     input = read_input()
     instructions, stack = parse_input(input)
-    ordered_stack = reorder_stack(instructions, stack)
+    ordered_stack = reorder_stack(True, instructions, stack)
 
     last_crates = [stack[-1][-1] for stack in ordered_stack]
 
     return ''.join(last_crates)
 
 
-print('Step 1', step_1(), sep=': ')
+def step_2() -> int:
+    input = read_input()
+    instructions, stack = parse_input(input)
+    ordered_stack = reorder_stack(False, instructions, stack)
+
+    last_crates = [stack[-1][-1] for stack in ordered_stack]
+
+    return ''.join(last_crates)
+
+
+print('Step 1', step_1(), sep=': ')  # ZWHVFWQWW
+print('Step 2', step_2(), sep=': ')  # HZFZCCWWV
